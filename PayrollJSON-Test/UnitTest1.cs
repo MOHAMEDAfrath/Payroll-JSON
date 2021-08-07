@@ -29,10 +29,26 @@ namespace PayrollJSON_Test
         {
             IRestResponse response = GetAllEmployee();
             List<Employee> list = JsonConvert.DeserializeObject<List<Employee>>(response.Content);
-            Assert.AreEqual(6,list.Count);
+            Assert.AreEqual(7,list.Count);
             Assert.AreEqual(HttpStatusCode.OK,response.StatusCode);
             foreach(var mem in list)
                 System.Console.WriteLine(mem.id+" "+mem.first_name+" "+mem.last_name+" "+mem.email);
+
+        }
+        //test the insertion
+        [TestMethod]
+        public void TestMethod_ToTest_InsertData_JSONServer()
+        {
+            RestRequest request = new RestRequest("/employees", Method.POST);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.Add("first_name", "Ram");
+            jsonObject.Add("last_name", "Kumar");
+            jsonObject.Add("email", "ramkumar@gmail.com");
+            request.AddParameter("application/json", jsonObject, ParameterType.RequestBody);
+            IRestResponse response = restClient.Execute(request);
+            var result = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual("Ram", result.first_name);
+            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
 
         }
     }
