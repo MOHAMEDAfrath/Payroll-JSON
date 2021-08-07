@@ -85,7 +85,6 @@ namespace PayrollJSON_Test
         [TestMethod]
         public void Test_Method_To_Update()
         {
-            Employee employee = new Employee();
             RestRequest request = new RestRequest("/employees/9", Method.PUT);
             JsonObject json = new JsonObject();
             json.Add("first_name", "Danny");
@@ -94,7 +93,19 @@ namespace PayrollJSON_Test
             request.AddJsonBody(json);
             IRestResponse response = restClient.Execute(request);
             var result = JsonConvert.DeserializeObject<Employee>(response.Content);
-            Assert.AreEqual(result.first_name, "Dhanush");
+            Assert.AreEqual(result.first_name, "Danny");
+        }
+        //deletes the given employee id
+        [TestMethod]
+        public void Delete_TestMethod()
+        {
+            RestRequest request = new RestRequest("/employees/9", Method.DELETE);
+            IRestResponse response = restClient.Execute(request);
+            //check count after deletion
+            IRestResponse response1 = GetAllEmployee();
+            List<Employee> result = JsonConvert.DeserializeObject<List<Employee>>(response1.Content);
+            Assert.AreEqual(8, result.Count);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }
