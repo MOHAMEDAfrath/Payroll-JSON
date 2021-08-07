@@ -62,7 +62,6 @@ namespace PayrollJSON_Test
         [TestMethod]
         public void TestMethod_ToTest_MultipleInsertion()
         {
-            RestRequest request = new RestRequest("/employees", Method.POST);
             List<JsonObject> list = new List<JsonObject>();
             JsonObject jsonObject = new JsonObject();
             jsonObject.Add("first_name", "Priya");
@@ -80,8 +79,22 @@ namespace PayrollJSON_Test
             IRestResponse response = GetAllEmployee();
             List<Employee> result = JsonConvert.DeserializeObject<List<Employee>>(response.Content);
             Assert.AreEqual(9, result.Count);
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-               
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);         
+        }
+        //method to update values for given id
+        [TestMethod]
+        public void Test_Method_To_Update()
+        {
+            Employee employee = new Employee();
+            RestRequest request = new RestRequest("/employees/9", Method.PUT);
+            JsonObject json = new JsonObject();
+            json.Add("first_name", "Danny");
+            json.Add("last_name", "Raj");
+            json.Add("email", "DhanushRaj@gmail.com");
+            request.AddJsonBody(json);
+            IRestResponse response = restClient.Execute(request);
+            var result = JsonConvert.DeserializeObject<Employee>(response.Content);
+            Assert.AreEqual(result.first_name, "Dhanush");
         }
     }
 }
