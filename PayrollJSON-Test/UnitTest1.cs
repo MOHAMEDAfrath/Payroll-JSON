@@ -33,7 +33,7 @@ namespace PayrollJSON_Test
             Assert.AreEqual(6,list.Count);
             Assert.AreEqual(HttpStatusCode.OK,response.StatusCode);
             foreach(var mem in list)
-                System.Console.WriteLine(mem.id+" "+mem.first_name+" "+mem.last_name+" "+mem.email);
+                System.Console.WriteLine(mem.id+" "+mem.first_name+" "+mem.last_name+" "+mem.salary);
 
         }
         //test the insertion
@@ -44,7 +44,7 @@ namespace PayrollJSON_Test
             JsonObject jsonObject = new JsonObject();
             jsonObject.Add("first_name", "Ram");
             jsonObject.Add("last_name", "Kumar");
-            jsonObject.Add("email", "ramkumar@gmail.com");
+            jsonObject.Add("salary", 25000);
             request.AddParameter("application/json", jsonObject, ParameterType.RequestBody);
             IRestResponse response = restClient.Execute(request);
             var result = JsonConvert.DeserializeObject<Employee>(response.Content);
@@ -67,12 +67,12 @@ namespace PayrollJSON_Test
             JsonObject jsonObject = new JsonObject();
             jsonObject.Add("first_name", "Priya");
             jsonObject.Add("last_name", "Devi");
-            jsonObject.Add("email", "priyadevi@gmail.com");
+            jsonObject.Add("salary", 23000);
             list.Add(jsonObject);
             JsonObject jsonObject1 = new JsonObject();
             jsonObject1.Add("first_name", "Dhanush");
             jsonObject1.Add("last_name", "Raj");
-            jsonObject1.Add("email", "DhanushRaj@gmail.com");
+            jsonObject1.Add("salary", 32000);
             list.Add(jsonObject1);
             foreach (var mem in list)
                 add(mem);
