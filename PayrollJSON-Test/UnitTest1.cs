@@ -12,8 +12,8 @@ namespace PayrollJSON_Test
     {
         //initializing the client
         RestClient restClient;
-       [TestInitialize]
-       public void SetUp()
+        [TestInitialize]
+        public void SetUp()
         {
             restClient = new RestClient("http://localhost:4000");
         }
@@ -30,10 +30,10 @@ namespace PayrollJSON_Test
         {
             IRestResponse response = GetAllEmployee();
             List<Employee> list = JsonConvert.DeserializeObject<List<Employee>>(response.Content);
-            Assert.AreEqual(6,list.Count);
-            Assert.AreEqual(HttpStatusCode.OK,response.StatusCode);
-            foreach(var mem in list)
-                System.Console.WriteLine(mem.id+" "+mem.first_name+" "+mem.last_name+" "+mem.email);
+            Assert.AreEqual(6, list.Count);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            foreach (var mem in list)
+                System.Console.WriteLine(mem.id + " " + mem.first_name + " " + mem.last_name + " " + mem.salary);
 
         }
         //test the insertion
@@ -44,7 +44,7 @@ namespace PayrollJSON_Test
             JsonObject jsonObject = new JsonObject();
             jsonObject.Add("first_name", "Ram");
             jsonObject.Add("last_name", "Kumar");
-            jsonObject.Add("email", "ramkumar@gmail.com");
+            jsonObject.Add("salary", 25000);
             request.AddParameter("application/json", jsonObject, ParameterType.RequestBody);
             IRestResponse response = restClient.Execute(request);
             var result = JsonConvert.DeserializeObject<Employee>(response.Content);
@@ -55,9 +55,9 @@ namespace PayrollJSON_Test
         public void add(JsonObject jsonObject)
         {
             RestRequest request = new RestRequest("/employees", Method.POST);
-             request.AddParameter("application/json", jsonObject, ParameterType.RequestBody);
-             IRestResponse response = restClient.Execute(request);
-            
+            request.AddParameter("application/json", jsonObject, ParameterType.RequestBody);
+            IRestResponse response = restClient.Execute(request);
+
         }
         [TestMethod]
         public void TestMethod_ToTest_MultipleInsertion()
@@ -66,12 +66,12 @@ namespace PayrollJSON_Test
             JsonObject jsonObject = new JsonObject();
             jsonObject.Add("first_name", "Priya");
             jsonObject.Add("last_name", "Devi");
-            jsonObject.Add("email", "priyadevi@gmail.com");
+            jsonObject.Add("salary", 23000);
             list.Add(jsonObject);
             JsonObject jsonObject1 = new JsonObject();
             jsonObject1.Add("first_name", "Dhanush");
             jsonObject1.Add("last_name", "Raj");
-            jsonObject1.Add("email", "DhanushRaj@gmail.com");
+            jsonObject1.Add("salary", 32000);
             list.Add(jsonObject1);
             foreach (var mem in list)
                 add(mem);
@@ -79,21 +79,22 @@ namespace PayrollJSON_Test
             IRestResponse response = GetAllEmployee();
             List<Employee> result = JsonConvert.DeserializeObject<List<Employee>>(response.Content);
             Assert.AreEqual(9, result.Count);
-            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);         
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
         //method to update values for given id
         [TestMethod]
         public void Test_Method_To_Update()
         {
+            Employee employee = new Employee();
             RestRequest request = new RestRequest("/employees/9", Method.PUT);
             JsonObject json = new JsonObject();
             json.Add("first_name", "Danny");
             json.Add("last_name", "Raj");
-            json.Add("email", "DhanushRaj@gmail.com");
+            json.Add("salary", 30000);
             request.AddJsonBody(json);
             IRestResponse response = restClient.Execute(request);
             var result = JsonConvert.DeserializeObject<Employee>(response.Content);
-            Assert.AreEqual(result.first_name, "Danny");
+            Assert.AreEqual(result.salary, 30000);
         }
         //deletes the given employee id
         [TestMethod]
